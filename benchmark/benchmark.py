@@ -23,15 +23,14 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--rounds", type=int, default=10, help="Number of rounds")
     args = parser.parse_args()
 
-    revision = open(DATA_DIR.joinpath("model_revision.txt")).read().strip()
+    entry = "Spedon/texify-fp16-onnx" if args.cuda else "Spedon/texify-quantized-onnx"
 
     if args.optimum:
         from optimum.onnxruntime import ORTModelForVision2Seq
         from optimum.pipelines import pipeline
 
         model = ORTModelForVision2Seq.from_pretrained(
-            "Spedon/texify-quantized-onnx",
-            revision=revision,
+            entry,
             provider="CUDAExecutionProvider" if args.cuda else "CPUExecutionProvider",
             use_io_binding=args.iob,
         )
@@ -43,21 +42,27 @@ if __name__ == "__main__":
         )
 
     else:
-        encoder_model_path = DATA_DIR.joinpath("encoder_model_quantized.onnx")
+        encoder_model_name = (
+            "encoder_model.onnx" if args.cuda else "encoder_model_quantized.onnx"
+        )
+        decoder_model_name = (
+            "decoder_model_merged.onnx"
+            if args.cuda
+            else "decoder_model_merged_quantized.onnx"
+        )
+        encoder_model_path = DATA_DIR.joinpath(encoder_model_name)
         if not encoder_model_path.exists():
             hf_hub_download(
-                "Spedon/texify-quantized-onnx",
-                filename="encoder_model_quantized.onnx",
+                entry,
+                filename=encoder_model_name,
                 local_dir=DATA_DIR,
-                revision=revision,
             )
-        decoder_model_path = DATA_DIR.joinpath("decoder_model_merged_quantized.onnx")
+        decoder_model_path = DATA_DIR.joinpath(decoder_model_name)
         if not decoder_model_path.exists():
             hf_hub_download(
-                "Spedon/texify-quantized-onnx",
-                filename="decoder_model_merged_quantized.onnx",
+                entry,
+                filename=decoder_model_name,
                 local_dir=DATA_DIR,
-                revision=revision,
             )
         tokenizer_json_path = DATA_DIR.joinpath("tokenizer.json")
         if not tokenizer_json_path.exists():
@@ -65,7 +70,6 @@ if __name__ == "__main__":
                 "Spedon/texify-quantized-onnx",
                 filename="tokenizer.json",
                 local_dir=DATA_DIR,
-                revision=revision,
             )
         model = TxfModel(
             encoder_model_path=encoder_model_path,
