@@ -27,9 +27,14 @@ class TxfModel:
     ) -> None:
         """Initialize the TxfModel class.
 
+        You should pass in same type(quantized/fp16) of encoder and decoder models, do not mix
+        them. And for CUDAExecutionProvider, it is recommended to use float32 or float16 models
+        instead of quantized models.
+
         Note:
-            You should pass in same type(quantized/fp16) of encoder and decoder models, do not mix them. And for
-            CUDAExecutionProvider, it is recommended to use float32 or float16 models instead of quantized models.
+            On CPU, enable I/O binding will bring a little performance degredation(~5%), but will
+            save memory(~15%).
+            On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(2-3x).
 
         Args:
             encoder_model_path (str | bytes | PathLike): Path to the encoder model.
@@ -96,7 +101,5 @@ class TxfModel:
                 f"I/O binding {'enabled' if self.use_io_binding else 'disabled'}"
             )
         else:
-            self.use_io_binding = True if self.device_type == "cuda" else False
-            logger.info(
-                f"I/O binding not specified, using default `{self.use_io_binding}` for `{self.device_type}` device type"
-            )
+            self.use_io_binding = True
+            logger.info("I/O binding not specified, defaulting to enabled")

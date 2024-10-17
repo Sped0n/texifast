@@ -39,11 +39,13 @@ __init__(
 
 Initialize the TxfModel class. 
 
+You should pass in same type(quantized/fp16) of encoder and decoder models, do not mix them. And for CUDAExecutionProvider, it is recommended to use float32 or float16 models instead of quantized models. 
+
 
 
 **Note:**
 
-> You should pass in same type(quantized/fp16) of encoder and decoder models, do not mix them. And for CUDAExecutionProvider, it is recommended to use float32 or float16 models instead of quantized models. 
+> On CPU, enable I/O binding will bring a little performance degredation(~5%), but will save memory(~15%). On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(2-3x). 
 >
 
 **Args:**
