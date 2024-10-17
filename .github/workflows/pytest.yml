@@ -1,0 +1,46 @@
+name: pytest
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --extras test
+
+      - name: Cache model files
+        uses: actions/cache@v4
+        with:
+          key: model-${{ hashFiles('./tests/*.onnx') }}
+          restore-keys: model-
+          path: |
+            ./tests/decoder_model_merged_quantized.onnx
+            ./tests/encoder_model_quantized.onnx
+            ./tests/tokenizer.json
+
+      - name: Run test
+        run: uv run pytest
