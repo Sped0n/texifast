@@ -253,7 +253,6 @@ class TxfPipeline:
                                 device_type=self.__model.device_type,
                             )
                         )
-                        first_pass = False
                     decoder_io_binding.bind_ortvalue_input(
                         past, ekv_ort_values[f"{i}.{j}.{k}"]
                     )
@@ -271,6 +270,10 @@ class TxfPipeline:
                 decoder_io_binding.bind_output(
                     present, device_type=self.__model.device_type
                 )
+
+            # update first_pass
+            if first_pass:
+                first_pass = False
 
         return token_ids
 
