@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           key: model-${{ hashFiles('./tests/model_revision.txt') }}
-          restore-keys: model-
+          restore-keys: model-${{ hashFiles('./tests/model_revision.txt') }}
           path: |
             ./tests/decoder_model_merged_quantized.onnx
             ./tests/encoder_model_quantized.onnx
