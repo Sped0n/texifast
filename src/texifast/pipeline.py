@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -12,8 +13,9 @@ from .helpers import logger
 from .model import TxfModel
 
 if TYPE_CHECKING:
-    from typing import TypeAlias
+    from typing import IO, TypeAlias
 
+    from _typeshed import StrOrBytesPath
     from numpy.typing import NDArray
 
     TxfArray: TypeAlias = NDArray[np.float32 | np.float16]
@@ -23,12 +25,17 @@ class TxfPipeline:
     def __init__(
         self,
         model: TxfModel,
-        tokenizer: Tokenizer,
+        tokenizer: Tokenizer | str | Path,
         config: TxfConfig | None = None,
     ) -> None:
         # referneces
         self.__model: TxfModel = model
-        self.__tokenizer: Tokenizer = tokenizer
+        if isinstance(tokenizer, Tokenizer):
+            self.__tokenizer: Tokenizer = tokenizer
+        elif isinstance(tokenizer, str):
+            self.__tokenizer = Tokenizer.from_file(tokenizer)
+        else:
+            self.__tokenizer = Tokenizer.from_file(str(tokenizer))
         self.__config: TxfConfig
         if config is not None:
             self.__config = config
@@ -260,7 +267,11 @@ class TxfPipeline:
         # HWC -> CHW -> BCHW
         return np_image.transpose(2, 0, 1).reshape(1, 3, *self.__config.size)
 
-    def __call__(self, image: Image.Image, max_new_tokens: int = 384) -> str:
+    def __call__(
+        self, image: Image.Image | StrOrBytesPath | IO[bytes], max_new_tokens: int = 384
+    ) -> str:
+        if not isinstance(image, Image.Image):
+            image = Image.open(image)
         pixel_values: TxfArray = self.__preprocess(image)
         token_ids: list[np.intp]
         if self.__model.use_io_binding:
