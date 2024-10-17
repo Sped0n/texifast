@@ -89,7 +89,7 @@ class TxfPipeline:
             "use_cache_branch": np.array([False]),
             **{
                 f"past_key_values.{i}.{j}.{k}": dummy_kv
-                for i in range(8)
+                for i in range(self.__config.decoder_layers)
                 for j in ["decoder", "encoder"]
                 for k in ["key", "value"]
             },
@@ -113,7 +113,7 @@ class TxfPipeline:
                             f"past_key_values.{i}.{j}.{k}": decoder_result[
                                 1 + 4 * i + ik if j == "decoder" else 3 + 4 * i + ik
                             ]
-                            for i in range(8)
+                            for i in range(self.__config.decoder_layers)
                             for j in ["decoder", "encoder"]
                             for ik, k in enumerate(["key", "value"])
                         },
@@ -155,7 +155,7 @@ class TxfPipeline:
         if self.__kv_bindings is None:
             self.kv_bindings = [
                 (f"past_key_values.{i}.{j}.{k}", f"present.{i}.{j}.{k}")
-                for i in range(8)
+                for i in range(self.__config.decoder_layers)
                 for j in ["decoder", "encoder"]
                 for k in ["key", "value"]
             ]
