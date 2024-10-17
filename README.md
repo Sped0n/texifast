@@ -1,4 +1,4 @@
-# texifast ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FSped0n%2Ftexifast%2Fmain%2Fpyproject.toml)
+# texifast ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FSped0n%2Ftexifast%2Fmain%2Fpyproject.toml)![PyPI - Version](https://img.shields.io/pypi/v/texifast)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Sped0n/texifast/pytest.yml?label=pytest)
 
 LaTeX and markdown OCR powered by texify, without bloated dependencies like torch or transformers.
 
