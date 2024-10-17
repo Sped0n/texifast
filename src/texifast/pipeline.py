@@ -13,7 +13,7 @@ from .helpers import logger
 from .model import TxfModel
 
 if TYPE_CHECKING:
-    from typing import IO, TypeAlias
+    from typing import IO, Any, TypeAlias
 
     from _typeshed import StrOrBytesPath
     from numpy.typing import NDArray
@@ -28,6 +28,13 @@ class TxfPipeline:
         tokenizer: Tokenizer | str | Path,
         config: TxfConfig | None = None,
     ) -> None:
+        """Initialize the TxfPipeline class.
+
+        Args:
+            model (TxfModel): The model to use for the pipeline.
+            tokenizer (Tokenizer | str | Path): The tokenizer to use for the pipeline.
+            config (TxfConfig, optional): The configuration to use for the pipeline. Defaults to None.
+        """
         # referneces
         self.__model: TxfModel = model
         if isinstance(tokenizer, Tokenizer):
@@ -55,6 +62,19 @@ class TxfPipeline:
         self.__kv_bindings: list[tuple[str, str]] | None = None
 
     def __generate(self, pixel_values: TxfArray, max_new_tokens: int) -> list[np.intp]:
+        """Generate tokens from pixel values.
+
+        Note:
+            TXFArray is a type alias for numpy array with float32 or float16 dtype.
+
+        Args:
+            pixel_values (TxfArray): Pixel values of the image.
+            max_new_tokens (int): Maximum number of new tokens to generate.
+
+        Returns:
+            list[np.intp]: List of token ids.
+
+        """
         encoder_result: TxfArray = self.__model.encoder_session.run(
             None, {"pixel_values": pixel_values}
         )
@@ -63,7 +83,7 @@ class TxfPipeline:
         token_ids: list[np.intp] = [self.__bos_token_id]
         dummy_kv: TxfArray = np.empty((1, 16, 0, 64), dtype=self.__model.dtype)
 
-        decoder_inputs = {
+        decoder_inputs: dict[str, NDArray[Any]] = {
             "encoder_hidden_states": hidden_state,
             "input_ids": np.array([[self.__bos_token_id]], dtype=np.int64),
             "use_cache_branch": np.array([False]),
@@ -118,6 +138,19 @@ class TxfPipeline:
     def __generate_with_io_binding(
         self, pixel_values: TxfArray, max_new_tokens: int
     ) -> list[np.intp]:
+        """Generate tokens from pixel values using I/O binding.
+
+        Note:
+            TXFArray is a type alias for numpy array with float32 or float16 dtype.
+
+        Args:
+            pixel_values (TxfArray): Pixel values of the image.
+            max_new_tokens (int): Maximum number of new tokens to generate.
+
+        Returns:
+            list[np.intp]: List of token ids.
+
+        """
         # create kv bindings if not exists
         if self.__kv_bindings is None:
             self.kv_bindings = [
@@ -242,6 +275,18 @@ class TxfPipeline:
         return token_ids
 
     def __preprocess(self, image: Image.Image) -> TxfArray:
+        """Preprocess the image.
+
+        Note:
+            TXFArray is a type alias for numpy array with float32 or float16 dtype.
+
+        Args:
+            image (Image.Image): The image to preprocess as a PIL Image.
+
+        Returns:
+            TxfArray: The preprocessed image as a numpy array.
+
+        """
         # RGB
         image = image.convert("RGB")
         # resize
@@ -270,6 +315,16 @@ class TxfPipeline:
     def __call__(
         self, image: Image.Image | StrOrBytesPath | IO[bytes], max_new_tokens: int = 384
     ) -> str:
+        """Generate result from the image.
+
+        Args:
+            image (Image.Image | StrOrBytesPath | IO[bytes]): The image to generate result from.
+            max_new_tokens (int, optional): Maximum number of new tokens to generate. Defaults to 384.
+
+        Returns:
+            str: The generated result.
+
+        """
         if not isinstance(image, Image.Image):
             image = Image.open(image)
         pixel_values: TxfArray = self.__preprocess(image)

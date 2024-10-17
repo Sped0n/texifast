@@ -10,11 +10,7 @@ from .helpers import logger
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from os import PathLike
-    from typing import Any, TypeAlias
-
-    from numpy.typing import NDArray
-
-    TxfArray: TypeAlias = NDArray[np.float32 | np.float16]
+    from typing import Any
 
 
 class TxfModel:
@@ -29,32 +25,25 @@ class TxfModel:
         use_io_binding: bool | None = None,
         **kwargs: Any,
     ) -> None:
-        """
-        Initialize the TxfModel class.
+        """Initialize the TxfModel class.
 
-        Parameters
-        ----------
-        encoder_model_path : str | bytes | PathLike
-            Path to the encoder model.
-        decoder_model_path : str | bytes | PathLike
-            Path to the decoder model.
-        provider : Sequence[str | tuple[str, dict[Any, Any]]], optional
-            Execution provider to use. Defaults to None.
-        session_options : ort.SessionOptions, optional
-            ONNXRuntime session options. Defaults to None.
-        provider_options : Sequence[dict[Any, Any]], optional
-            Execution provider options. Defaults to None.
-        use_io_binding : bool, optional
-            Enable I/O binding. Defaults to None.
+        Note:
+            You should pass in same type(quantized/fp16) of encoder and decoder models, do not mix them. And for
+            CUDAExecutionProvider, it is recommended to use float32 or float16 models instead of quantized models.
 
-        Raises
-        ------
-        ONNXRuntimeError
-            ONNXRuntime exception.
-        ValueError
-            Encoder and decoder models type mismatch.
-        NotImplementedError
-            Unsupported dtype.
+        Args:
+            encoder_model_path (str | bytes | PathLike): Path to the encoder model.
+            decoder_model_path (str | bytes | PathLike): Path to the decoder model.
+            provider (Sequence[str | tuple[str, dict[Any, Any]]], optional): Providers for the model. Defaults to None.
+            session_options (ort.SessionOptions, optional): Session options for the model. Defaults to None.
+            provider_options (Sequence[dict[Any, Any]], optional): Provider options for the model. Defaults to None.
+            use_io_binding (bool, optional): I/O binding for the model. Defaults to None.
+            **kwargs: Additional keyword arguments passed to the `onnxruntime.InferenceSession`.
+
+        Raises:
+            ValueError: If the encoder and decoder models have different types.
+            ValueError: If the dtype is not supported.
+            ONNXRuntimeError: Exception from ONNXRuntime.
         """
         # inference sessions
         self.encoder_session = ort.InferenceSession(
@@ -99,7 +88,7 @@ class TxfModel:
         else:
             err_msg = f"Unsupported dtype: {self.encoder_session.get_inputs()[0].type}"
             logger.error(err_msg)
-            raise NotImplementedError(err_msg)
+            raise ValueError(err_msg)
         # io binding
         if use_io_binding is not None:
             self.use_io_binding: bool = use_io_binding
