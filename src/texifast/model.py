@@ -35,7 +35,7 @@ class TxfModel:
             On CPU, enable I/O binding will bring a little performance degredation(~5%), because the
             time saved from memory management is offset by Python's for loop, so it is disabled by
             default.
-            On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(2-3x),
+            On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(~2x),
             and it is enabled by default.
 
         Args:
