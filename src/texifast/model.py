@@ -32,9 +32,11 @@ class TxfModel:
         instead of quantized models.
 
         Note:
-            On CPU, enable I/O binding will bring a little performance degredation(~5%), but will
-            save memory(~15%).
-            On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(2-3x).
+            On CPU, enable I/O binding will bring a little performance degredation(~5%), because the
+            time saved from memory management is offset by Python's for loop, so it is disabled by
+            default.
+            On CUDA, enable I/O binding is a no-brainer, it will bring huge performance boost(2-3x),
+            and it is enabled by default.
 
         Args:
             encoder_model_path (str | bytes | PathLike): Path to the encoder model.
@@ -101,5 +103,7 @@ class TxfModel:
                 f"I/O binding {'enabled' if self.use_io_binding else 'disabled'}"
             )
         else:
-            self.use_io_binding = True
-            logger.info("I/O binding not specified, defaulting to enabled")
+            self.use_io_binding = True if self.device_type == "cuda" else False
+            logger.info(
+                f"I/O binding not specified, using default value `{self.use_io_binding}` for `{self.device_type}`"
+            )
