@@ -36,7 +36,7 @@ jobs:
       - name: Cache model files
         uses: actions/cache@v4
         with:
-          key: model-${{ hashFiles('./tests/*.onnx') }}
+          key: model-${{ hashFiles('./tests/model_revision.txt') }}
           restore-keys: model-
           path: |
             ./tests/decoder_model_merged_quantized.onnx

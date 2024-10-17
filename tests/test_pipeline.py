@@ -11,12 +11,14 @@ THIS_DIR = Path(__file__).parent
 
 
 def test_txf_pipeline() -> None:
+    revision = open(THIS_DIR.joinpath("model_revision.txt")).read().strip()
     encoder_model_path = THIS_DIR.joinpath("encoder_model_quantized.onnx")
     if not encoder_model_path.exists():
         hf_hub_download(
             "Spedon/texify-quantized-onnx",
             filename="encoder_model_quantized.onnx",
             local_dir=THIS_DIR,
+            revision=revision,
         )
     decoder_model_path = THIS_DIR.joinpath("decoder_model_merged_quantized.onnx")
     if not decoder_model_path.exists():
@@ -24,6 +26,7 @@ def test_txf_pipeline() -> None:
             "Spedon/texify-quantized-onnx",
             filename="decoder_model_merged_quantized.onnx",
             local_dir=THIS_DIR,
+            revision=revision,
         )
     tokenizer_config_path = THIS_DIR.joinpath("tokenizer.json")
     if not tokenizer_config_path.exists():
@@ -31,6 +34,7 @@ def test_txf_pipeline() -> None:
             "Spedon/texify-quantized-onnx",
             filename="tokenizer.json",
             local_dir=THIS_DIR,
+            revision=revision,
         )
     model = TxfModel(
         encoder_model_path=encoder_model_path,
