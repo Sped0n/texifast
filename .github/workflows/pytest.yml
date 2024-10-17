@@ -30,7 +30,7 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --extras test
+        run: uv sync --extra test
 
       - name: Cache model files
         uses: actions/cache@v4
