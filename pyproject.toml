@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "texifast"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["numpy>=2", "pillow>=10", "tokenizers>=0.20"]
+
+[project.optional-dependencies]
+cpu = ["onnxruntime>=1.19.0"]
+gpu = ["onnxruntime-gpu>=1.19.0"]
+test = ["onnxruntime>=1.19.0", "pytest>=6.2.5", "huggingface_hub>=0.25.2"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = ["--import-mode=importlib"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportUnknownMemberType = false
+reportAny = false
+reportImplicitOverride = false
+reportMissingTypeStubs = false
+reportUnknownVariableType = false
+reportUnknownArgumentType = false
+
+[tool.ruff.lint]
+extend-select = ["I", "N", "PERF", "UP"]
