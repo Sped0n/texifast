@@ -34,6 +34,5 @@ extend-select = ["I", "N", "PERF", "UP"]
 dev-dependencies = [
   "huggingface-hub>=0.25.2",
   "lazydocs>=0.4.8",
-  "memray>=1.14.0",
   "pytest>=8.3.3",
 ]
