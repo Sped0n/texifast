@@ -9,7 +9,7 @@ like so:
 ```
 pip install texifast[cpu]
 # or if you want to use GPU(cuda) acceleration
-pip install texifast[all]
+pip install texifast[gpu]
 ```
 
 Directly installing texifast will not install onnxruntime by default!!!
@@ -25,5 +25,5 @@ try:
 except AssertionError:
     logger.error(ERROR_MSG)
     raise ImportError(
-        "Onnxruntime not found, please install texifast with the 'cpu' or 'all' extra"
+        "Onnxruntime not found, please install texifast with the 'cpu' or 'gpu' extra"
     )
