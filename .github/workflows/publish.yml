@@ -31,9 +31,6 @@ jobs:
       - name: Install the project
         run: uv sync --extra cpu --dev
 
-      - name: Install build
-        run: uv pip install build
-
       - name: Build package
         run: |
           uv run -m build

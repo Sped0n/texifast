@@ -33,6 +33,7 @@ extend-select = ["I", "N", "PERF", "UP"]
 
 [tool.uv]
 dev-dependencies = [
+  "build>=1.2.2.post1",
   "huggingface-hub>=0.25.2",
   "lazydocs>=0.4.8",
   "pytest>=8.3.3",
