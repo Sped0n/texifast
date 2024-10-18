@@ -93,7 +93,7 @@ xxhash             3.5.0
 yarl               1.15.4
 ```
 
-### Result
+### Result(`CPUExecutionProvider` with [quantized model](https://huggingface.co/Spedon/texify-quantized-onnx/tree/main))
 
 |                                                                 | texifast(with io_binding) | texifast(no io_binding) | Optimum(with io_binding) | Optimum(no io_binding) |
 | :-------------------------------------------------------------: | :-----------------------: | :---------------------: | :----------------------: | :--------------------: |
@@ -104,9 +104,9 @@ yarl               1.15.4
 
 ### Hardware Spec
 
-*   CPU: Intel(R) Core(TM) i5-12400F
-*   Memory: 32GB DDR4 3200MHz
-*   GPU: NVIDIA GeForce RTX4060
+- CPU: Intel(R) Core(TM) i5-12400F
+- Memory: 32GB DDR4 3200MHz
+- GPU: NVIDIA GeForce RTX4060
 
 ### Environment
 
@@ -185,13 +185,13 @@ xxhash             3.5.0
 yarl               1.15.4
 ```
 
-### Result(CPU)
+### Result(`CPUExecutionProvider` with [quantized model](https://huggingface.co/Spedon/texify-quantized-onnx/tree/main))
 
 |                                     | texifast(with io_binding) | texifast(no io_binding) | Optimum(with io_binding) | Optimum(no io_binding) |
 | :---------------------------------: | :-----------------------: | :---------------------: | :----------------------: | :--------------------: |
 | **Avg Inference time of 10 rounds** |          2.372s           |         2.325s          |          2.925s          |         3.833s         |
 
-### Result(GPU)
+### Result(`CUDAExecutionProvider` with [mixed precision model](https://huggingface.co/Spedon/texify-fp16-onnx/tree/main))
 
 |                                     | texifast(with io_binding) | texifast(no io_binding) | Optimum(with io_binding) | Optimum(no io_binding) |
 | :---------------------------------: | :-----------------------: | :---------------------: | :----------------------: | :--------------------: |

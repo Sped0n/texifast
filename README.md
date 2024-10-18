@@ -5,16 +5,18 @@ LaTeX and markdown OCR powered by [texify](https://github.com/VikParuchuri/texif
 ## Features
 
 - Minimal dependency graph
-- Compared to [Optimum](https://github.com/huggingface/optimum), texifast is faster (5-20%) and has a smaller memory footprint (~20%). For details, see [benchmark](https://github.com/Sped0n/texifast/tree/main/benchmark)
+- Compared to [Optimum](https://github.com/huggingface/optimum), texifast is faster (~20%) and has a smaller memory footprint (~20%). For details, see [benchmark](https://github.com/Sped0n/texifast/tree/main/benchmark).
 - Supports IOBinding features of ONNXRuntime and optimizes for CUDAExecutionProvider.
 - Supports quantized/mixed precision models.
 
 ## Installation
 
+You must implicitly specify the required dependencies.
+
 ```
 pip install texifast[cpu]
 # or if you want to use CUDAExecutionProvider
-pip install texifast[all]
+pip install texifast[gpu]
 ```
 
 > ⚠️⚠️⚠️
