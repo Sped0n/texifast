@@ -37,6 +37,8 @@ texifast = TxfPipeline(model=model, tokenizer="./tokenizer.json")
 print(texifast("./latex.png"))
 ```
 
+> You can download the quantized ONNX model [here](https://huggingface.co/Spedon/texify-quantized-onnx/tree/main) and the FP16 ONNX model [here](https://huggingface.co/Spedon/texify-fp16-onnx/tree/main).
+
 ## API
 
 The full Python API documentation can be found [here](https://github.com/Sped0n/texifast/tree/main/docs).
