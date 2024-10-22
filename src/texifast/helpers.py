@@ -66,5 +66,6 @@ def refine_math_block(text: str) -> str:
             last_block_is_math_block = True
         else:
             parts[i] = parts[i].strip()
+            last_block_is_math_block = False
     result: str = "".join(parts).strip()
     return result
