@@ -17,6 +17,7 @@
 
 ## Functions
 
+- [`helpers.refine_math_block`](./texifast.helpers.md#function-refine_math_block): Refine the math block in the text.
 - [`helpers.set_log_level`](./texifast.helpers.md#function-set_log_level): Set the log level of the logger.
 
 

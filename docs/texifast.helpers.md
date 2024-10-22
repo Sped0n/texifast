@@ -10,7 +10,7 @@
 
 ---
 
-<a href="../src/texifast/helpers.py#L36"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+<a href="../src/texifast/helpers.py#L37"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
 
 ## <kbd>function</kbd> `set_log_level`
 
@@ -25,6 +25,31 @@ Set the log level of the logger.
 **Args:**
  
  - <b>`level`</b> (int):  The log level to set. 
+
+
+---
+
+<a href="../src/texifast/helpers.py#L47"><img align="right" style="float:right;" src="https://img.shields.io/badge/-source-cccccc?style=flat-square"></a>
+
+## <kbd>function</kbd> `refine_math_block`
+
+```python
+refine_math_block(text: str) → str
+```
+
+Refine the math block in the text. 
+
+
+
+**Args:**
+ 
+ - <b>`text`</b> (str):  The text to refine. 
+
+
+
+**Returns:**
+ 
+ - <b>`str`</b>:  The refined text. 
 
 
 
