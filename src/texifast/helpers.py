@@ -1,4 +1,5 @@
 import logging
+import re
 
 
 class _CustomFormatter(logging.Formatter):
@@ -41,3 +42,29 @@ def set_log_level(level: int) -> None:
 
     """
     logger.setLevel(level)
+
+
+def refine_math_block(text: str) -> str:
+    """Refine the math block in the text.
+
+    Args:
+        text (str): The text to refine.
+
+    Returns:
+        str: The refined text.
+    """
+    pattern = r"(\$\$.*?\$\$)"
+    parts: list[str] = re.split(pattern, text, flags=re.DOTALL)
+    last_block_is_math_block: bool = False
+    for i in range(len(parts)):
+        if re.match(pattern, parts[i]):
+            parts[i] = (
+                f"$$\n{parts[i][2:-2]}\n$$\n\n"
+                if last_block_is_math_block
+                else f"\n\n$$\n{parts[i][2:-2]}\n$$\n\n"
+            )
+            last_block_is_math_block = True
+        else:
+            parts[i] = parts[i].strip()
+    result: str = "".join(parts).strip()
+    return result

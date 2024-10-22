@@ -9,7 +9,7 @@ from PIL import Image, ImageOps
 from tokenizers import Tokenizer
 
 from .config import TxfConfig
-from .helpers import logger
+from .helpers import logger, refine_math_block
 from .model import TxfModel
 
 if TYPE_CHECKING:
@@ -316,13 +316,17 @@ class TxfPipeline:
         return np_image.transpose(2, 0, 1).reshape(1, 3, *self.__config.size)
 
     def __call__(
-        self, image: Image.Image | StrOrBytesPath | IO[bytes], max_new_tokens: int = 384
+        self,
+        image: Image.Image | StrOrBytesPath | IO[bytes],
+        max_new_tokens: int = 384,
+        refine_output: bool = False,
     ) -> str:
         """Generate result from the image.
 
         Args:
             image (Image.Image | StrOrBytesPath | IO[bytes]): The image to generate result from.
             max_new_tokens (int, optional): Maximum number of new tokens to generate. Defaults to 384.
+            refine_output (bool, optional): Whether to refine the math block in output. Defaults to False.
 
         Returns:
             str: The generated result.
@@ -336,4 +340,8 @@ class TxfPipeline:
             token_ids = self.__generate_with_io_binding(pixel_values, max_new_tokens)
         else:
             token_ids = self.__generate(pixel_values, max_new_tokens)
-        return self.__tokenizer.decode(token_ids)
+        return (
+            refine_math_block(self.__tokenizer.decode(token_ids))
+            if refine_output
+            else self.__tokenizer.decode(token_ids)
+        )
